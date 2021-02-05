@@ -2,12 +2,16 @@ import './Checkout.css';
 import CheckoutItem from '../CheckoutItem/CheckoutItem';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function Checkout() {
     const dispatch = useDispatch();
     const history = useHistory();
     //Get pizzas from the store
     const pizzas = useSelector(store => store.pizzaCart);
+    const customerInfo = useSelector(store => store.customerInfo);
+
+
     //add up cart
     const addUpCart = (cart) => {
         let sum = 0;
@@ -19,9 +23,18 @@ function Checkout() {
     const emptyCart = () => {
         console.log(pizzas)
         dispatch ({type: 'SET_ORDERS', payload: pizzas})
+        dispatch ({type: 'SET_ORDERS', payload: customerInfo })
         dispatch ({type: 'CLEAR_CART'})
         history.push('/')
     }
+
+    axios.post('/api/order', {customerInfo: customerInfo})
+    .then(() => {
+      response(response);
+
+    }).catch( (err) => console.log(err))
+
+    
     return (
         <>
             <h2>Step 3: Checkout</h2>
